@@ -8,7 +8,7 @@ interface Props {
 const { images, id, aspectRatio = 'aspect-square md:aspect-[4/3]' } = Astro.props;
 ---
 
-<div class={`relative ${aspectRatio} overflow-hidden rounded-lg shadow-xl group`} id={id}>
+<div class={`relative ${aspectRatio} overflow-hidden rounded-none md:rounded-lg shadow-xl group`} id={id}>
   {images.map((img, index) => (
     <img 
       src={img} 

@@ -75,7 +75,7 @@ const title = "Pachamama Milano | Cucina Novoandina";
         <div class="container mx-auto max-w-6xl">
             <div class="flex flex-col md:flex-row items-center gap-16">
                  <!-- Text on Left -->
-                <div class="w-full md:w-1/2 order-2 md:order-1 px-4 md:px-0">
+                <div class="w-full md:w-1/2 px-4 md:px-0">
                     <span class="bg-black text-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest mb-4 inline-block">Cucina Novoandina</span>
                     <h2 class="text-4xl md:text-5xl font-display font-bold mb-8 uppercase tracking-normal text-black">- I Nostri Piatti</h2>
                     <p class="text-gray-600 mb-6 leading-relaxed">
@@ -94,7 +94,7 @@ const title = "Pachamama Milano | Cucina Novoandina";
 
 
                 <!-- Image on Right (Carousel) -->
-                <div class="w-full md:w-1/2 order-1 md:order-2">
+                <div class="w-full md:w-1/2">
                     <Carousel 
                         images={dishesImages} 
                         id="carousel-dishes" 
@@ -112,7 +112,7 @@ const title = "Pachamama Milano | Cucina Novoandina";
         <div class="container mx-auto max-w-6xl">
             <div class="flex flex-col md:flex-row items-center gap-16">
                  <!-- Image on Left (Carousel) -->
-                 <div class="md:w-1/2">
+                 <div class="w-full md:w-1/2 order-2 md:order-1">
                     <Carousel 
                         images={cocktailsImages} 
                         id="carousel-cocktails" 
@@ -121,7 +121,7 @@ const title = "Pachamama Milano | Cucina Novoandina";
                 </div>
 
                  <!-- Text on Right -->
-                <div class="w-full md:w-1/2 px-4 md:px-0">
+                <div class="w-full md:w-1/2 px-4 md:px-0 order-1 md:order-2">
                     <span class="bg-black text-white px-2 py-1 text-xs uppercase tracking-widest mb-4 inline-block">Risto Bar</span>
                     <h2 class="text-4xl md:text-5xl font-display font-bold mb-8 uppercase tracking-normal">- I Nostri Cocktail</h2>
                     <p class="text-gray-600 mb-6 leading-relaxed">
