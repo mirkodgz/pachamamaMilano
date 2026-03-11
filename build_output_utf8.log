@@ -1,0 +1,60 @@
+﻿
+> pachamama-sitio@0.0.1 build
+> astro build
+
+[2m19:25:39[22m [34m[@astrojs/node][39m Enabling sessions with filesystem storage
+[2m19:25:39[22m [34m[content][39m Syncing content
+[2m19:25:39[22m [34m[content][39m Synced content
+[2m19:25:39[22m [34m[types][39m Generated [2m50ms[22m
+[2m19:25:39[22m [34m[build][39m output: [34m"server"[39m
+[2m19:25:39[22m [34m[build][39m mode: [34m"server"[39m
+[2m19:25:39[22m [34m[build][39m directory: [34mD:\pachamama-sitio\dist\[39m
+[2m19:25:39[22m [34m[build][39m adapter: [32m@astrojs/node[39m
+[2m19:25:39[22m [34m[build][39m Collecting build info...
+[2m19:25:39[22m [34m[build][39m [32mÔ£ô Completed in 81ms.[39m
+[2m19:25:39[22m [34m[build][39m Building server entrypoints...
+node.exe : 
+[31m[1m19:25:40[22m 
+[ERROR] [vite][39m 
+[31mÔ£ù[39m Build failed 
+in 685ms
+En línea: 1 Carácter: 1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: ([31m[  
+  1m19:25:...failed in 685   
+ ms:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+Unexpected "fs"
+  [1mLocation:[22m
+    [4mD:/pachamama-sitio/sr
+c/lib/gift-card-generator.ts:
+9:11[24m
+  [1mStack trace:[22m
+[2m    at 
+failureErrorWithLog (D:\pacha
+mama-sitio\node_modules\esbui
+ld\lib\main.js:1467:15)
+    at 
+responseCallbacks.<computed> 
+(D:\pachamama-sitio\node_modu
+les\esbuild\lib\main.js:603:9
+)
+    at Socket.readFromStdout 
+(D:\pachamama-sitio\node_modu
+les\esbuild\lib\main.js:581:7
+)
+    at addChunk (node:interna
+l/streams/readable:561:12)
+    at Readable.push (node:in
+ternal/streams/readable:392:5
+)[22m
