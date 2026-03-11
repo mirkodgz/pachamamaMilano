@@ -2,11 +2,11 @@
 
 @theme {
   --color-gold: #ffd54e;
-  --color-red-accent: #EF4444;
+  --color-red-accent: #ef4444;
   --color-dark: #1a1a1a;
 
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'Montserrat', sans-serif;
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "Montserrat", sans-serif;
 }
 
 /* Custom Utilities */
@@ -25,4 +25,9 @@ body {
   background-color: var(--color-dark);
   color: white;
   font-family: var(--font-body);
+}
+
+/* Override all Tailwind tracking-* utilities to 0px globally */
+* {
+  letter-spacing: 0px !important;
 }
