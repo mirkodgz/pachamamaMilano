@@ -43,7 +43,7 @@ export const POST: APIRoute = async ({ request }) => {
     // --- ENVIAR CORREO DE BIENVENIDA (RESEND) ---
     try {
         const { Resend } = await import('resend');
-        const resendApiKey = import.meta.env.RESEND_API_KEY || (typeof process !== 'undefined' ? process.env.RESEND_API_KEY : undefined);
+        const resendApiKey = (typeof process !== 'undefined' ? process.env.RESEND_API_KEY : undefined) || import.meta.env.RESEND_API_KEY;
         const resend = new Resend(resendApiKey);
         
         // Obtenemos todos los detalles necesarios para el correo
@@ -59,7 +59,7 @@ export const POST: APIRoute = async ({ request }) => {
           const whatsappMsg = encodeURIComponent(`Ciao, ti mando il comprobante della mia Gift Card da €${formattedAmount}`);
           const whatsappUrl = `https://wa.me/393284281204?text=${whatsappMsg}`;
 
-          await resend.emails.send({
+          const { data, error } = await resend.emails.send({
             from: 'Pachamama Milano <marketing@pachamamamilano.it>',
             to: [email.toLowerCase()],
             subject: 'Benvenuto nella famiglia Pachamama! (Ordine #' + shortId + ')',
@@ -109,6 +109,12 @@ export const POST: APIRoute = async ({ request }) => {
               </div>
             `
           });
+          
+          if (error) {
+            console.error("Resend API returned an error:", error);
+          } else {
+            console.log("Email inviata con successo via Resend:", data);
+          }
         }
     } catch (emailError) {
         console.error("Non è stato possibile inviare l'email di benvenuto:", emailError);

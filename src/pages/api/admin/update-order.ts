@@ -36,7 +36,7 @@ export const POST: APIRoute = async ({ request }) => {
 
           // 4. Enviar Correo con Resend
           const { Resend } = await import('resend');
-          const resendApiKey = import.meta.env.RESEND_API_KEY || (typeof process !== 'undefined' ? process.env.RESEND_API_KEY : undefined);
+          const resendApiKey = (typeof process !== 'undefined' ? process.env.RESEND_API_KEY : undefined) || import.meta.env.RESEND_API_KEY;
           const resend = new Resend(resendApiKey);
 
           const formattedAmount = (cardData.amount / 100).toFixed(2);

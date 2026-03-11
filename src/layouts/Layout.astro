@@ -36,13 +36,14 @@ const {
         PUBLIC_SUPABASE_URL:
           import.meta.env.PUBLIC_SUPABASE_URL ||
           (typeof process !== "undefined"
-            ? process.env.PUBLIC_SUPABASE_URL
+            ? process.env.PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
             : undefined) ||
           "https://dummy.supabase.co",
         PUBLIC_SUPABASE_ANON_KEY:
           import.meta.env.PUBLIC_SUPABASE_ANON_KEY ||
           (typeof process !== "undefined"
-            ? process.env.PUBLIC_SUPABASE_ANON_KEY
+            ? process.env.PUBLIC_SUPABASE_ANON_KEY ||
+              process.env.SUPABASE_ANON_KEY
             : undefined) ||
           "dummy_key",
       }}
