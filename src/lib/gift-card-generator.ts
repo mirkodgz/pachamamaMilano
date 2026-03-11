@@ -5,8 +5,16 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 
 export async function generateGiftCardImage(cardData: any) {
   try {
-    // 1. Ruta de la plantilla (Usamos el Modelo 3 como base oficial)
-    const templatePath = path.resolve('./src/imagesgc/model3.webp');
+    // 1. Ruta de la plantilla (Usamos el Modelo 3 como base oficial desde la carpeta pública o estática)
+    import fs from 'fs';
+    let templatePath = path.resolve('./public/imagesgc/model3.webp');
+    if (!fs.existsSync(templatePath)) {
+      templatePath = path.resolve('./dist/client/imagesgc/model3.webp');
+    }
+    if (!fs.existsSync(templatePath)) {
+      console.error("ERRORE CRITICO: Template Gift Card non trovato su disco en:", templatePath);
+      throw new Error("Template base image model3.webp missing from server filesystem.");
+    }
     
     // 2. Crear los SVGs para el texto
     const amountText = Buffer.from(`

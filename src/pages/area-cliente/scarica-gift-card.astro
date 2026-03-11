@@ -235,32 +235,29 @@ const title = "La tua Gift Card | Pachamama Milano";
       const btnText = document.getElementById("btn-text");
       const cardContainer = document.getElementById("giftcard-container");
 
-      btnDownload?.addEventListener("click", async () => {
-        if (!cardContainer) return;
+      const getBase64Image = async () => {
+        if (!cardContainer) throw new Error("Card container missing");
+        return await toJpeg(cardContainer as HTMLElement, {
+          quality: 1,
+          pixelRatio: 2,
+          style: {
+            transform: "scale(1)",
+            transformOrigin: "top left",
+          },
+        });
+      };
 
+      btnDownload?.addEventListener("click", async () => {
         try {
-          // Estado de carga
           const originalText = btnText
             ? btnText.textContent
             : "Scarica Immagine (JPG)";
           if (btnText) btnText.textContent = "Generando...";
-          // if (btnDownload) btnDownload.disabled = true;
 
-          // Mejorar la calidad de la descarga escalando a pixel ratio 2
-          const dataUrl = await toJpeg(cardContainer as HTMLElement, {
-            quality: 1,
-            pixelRatio: 2,
-            style: {
-              transform: "scale(1)",
-              transformOrigin: "top left",
-            },
-          });
-
+          const dataUrl = await getBase64Image();
           download(dataUrl, "GiftCard-Pachamama.jpg");
 
-          // Restaurar botón
           if (btnText) btnText.textContent = originalText;
-          // if (btnDownload) btnDownload.disabled = false;
         } catch (error) {
           console.error("Error generating image:", error);
           alert(
@@ -268,6 +265,31 @@ const title = "La tua Gift Card | Pachamama Milano";
               error,
           );
           if (btnText) btnText.textContent = "Scarica Immagine (JPG)";
+        }
+      });
+
+      // API silenciosa para capturar desde el panel de Admin vía Iframe
+      window.addEventListener("message", async (event) => {
+        if (event.data && event.data.action === "CAPTURE_BASE64") {
+          try {
+            // Pequeño delay para asegurar que webfonts y patrones cargaron en el iframe
+            setTimeout(async () => {
+              const dataUrl = await getBase64Image();
+              const sourceWindow = event.source as Window;
+              if (sourceWindow) {
+                sourceWindow.postMessage(
+                  {
+                    action: "BASE64_RESULT",
+                    orderId: event.data.orderId,
+                    dataUrl: dataUrl,
+                  },
+                  event.origin || "*",
+                );
+              }
+            }, 1500);
+          } catch (e) {
+            console.error("Iframe Capture Error", e);
+          }
         }
       });
     });

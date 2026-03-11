@@ -4,7 +4,7 @@ import { supabaseAdmin, supabase } from '../../../lib/supabase';
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { token, orderId, status, gift_card_url } = body;
+    const { token, orderId, status, gift_card_url, base64Image } = body;
     
     if (!token || !orderId) {
         return new Response(JSON.stringify({ error: 'Dati mancanti' }), { status: 400 });
@@ -26,15 +26,15 @@ export const POST: APIRoute = async ({ request }) => {
           .eq('id', orderId)
           .single();
         
-        if (cardData) {
-          // 2. Generar la imagen física (usando Sharp en el servidor)
-          const { generateGiftCardImage } = await import('../../../lib/gift-card-generator');
-          const { giftCardUrl, imageBuffer } = await generateGiftCardImage(cardData);
+        if (cardData && base64Image) {
+          // 2. Convertir la imagen base64 del Frontend (HTML2Canvas exact design) a Buffer
+          const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, "");
+          const imageBuffer = Buffer.from(base64Data, "base64");
           
-          // 3. Actualizar la URL en la BD
-          await supabaseAdmin.from('gift_cards').update({ gift_card_url: giftCardUrl }).eq('id', orderId);
-
-          // 4. Enviar Correo con Resend
+          // 3. (Opcional) Podemos subirla a R2 si queremos que se guarde en la BD, la omitimos aquí si solo es para el correo o adaptamos R2 aquí.
+          // Para no romper la DB, guardaremos algo quemado o podemos reusar cloudflare.ts
+          
+          // 4. Enviar Correo con Resend usando el Buffer exacto del frontend
           const { Resend } = await import('resend');
           let resendApiKey = import.meta.env.RESEND_API_KEY;
           if (typeof process !== 'undefined' && process.env && process.env.RESEND_API_KEY) {
@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
           const formattedAmount = (cardData.amount / 100).toFixed(2);
           const shortId = cardData.id.split('-')[0].toUpperCase();
 
-          console.log("Generando email para Gift Card:", giftCardUrl);
+          console.log("Generando email para Gift Card con diseño Frontend capturado...");
 
           const { data, error: resendError } = await resend.emails.send({
             from: 'Pachamama Milano <marketing@pachamamamilano.it>',

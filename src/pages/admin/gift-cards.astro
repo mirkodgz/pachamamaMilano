@@ -239,7 +239,62 @@ const title = "Gestione Gift Card | Pachamama Admin";
 
     // Attach to window so onclick inside raw HTML works
     (window as any).updateStatus = async (orderId: string, status: string) => {
-      showToast("Aggiornamento...");
+      showToast("Aggiornamento in corso...");
+
+      let base64Image = "";
+
+      // Si el estado es "confirmed", generamos el base64 de la imagen primero usando el frontend (iframe invisible)
+      if (status === "confirmed") {
+        showToast("Generando email con design...");
+        try {
+          base64Image = await new Promise((resolve, reject) => {
+            // Creamos un iframe invisible
+            const iframe = document.createElement("iframe");
+            iframe.style.position = "absolute";
+            iframe.style.left = "-10000px";
+            iframe.style.top = "0";
+            iframe.style.width = "1024px";
+            iframe.style.height = "768px";
+            iframe.src = `/area-cliente/scarica-gift-card?id=${orderId}`;
+
+            // Listener para cuando el iframe cargue
+            iframe.onload = () => {
+              // Pedimos al iframe que capture la imagen
+              iframe.contentWindow?.postMessage(
+                { action: "CAPTURE_BASE64", orderId },
+                "*",
+              );
+            };
+
+            // Nos suscribimos a la respuesta del iframe
+            const messageHandler = (event: MessageEvent) => {
+              if (
+                event.data &&
+                event.data.action === "BASE64_RESULT" &&
+                event.data.orderId === orderId
+              ) {
+                window.removeEventListener("message", messageHandler);
+                document.body.removeChild(iframe);
+                resolve(event.data.dataUrl);
+              }
+            };
+            window.addEventListener("message", messageHandler);
+
+            document.body.appendChild(iframe);
+
+            // Timeout de seguridad en caso de que el iframe falle o re-dirija
+            setTimeout(() => {
+              window.removeEventListener("message", messageHandler);
+              if (document.body.contains(iframe))
+                document.body.removeChild(iframe);
+              resolve(""); // Resuelve vacío para que no rompa la app entera, solo enviará sin imagen
+            }, 5000);
+          });
+        } catch (e) {
+          console.error("Error al capturar la imagen del frontend:", e);
+        }
+      }
+
       try {
         const res = await fetch("/api/admin/update-order", {
           method: "POST",
@@ -248,12 +303,13 @@ const title = "Gestione Gift Card | Pachamama Admin";
             token: currentSession.access_token,
             orderId,
             status,
-            gift_card_url: "", // Mantener vacio o lo que estipule tu API
+            gift_card_url: "",
+            base64Image: base64Image || undefined,
           }),
         });
 
         if (res.ok) {
-          showToast("Stato aggiornato!");
+          showToast("Stato aggiornato con successo!");
         } else {
           showToast("Errore durante l'aggiornamento", true);
         }
