@@ -9,8 +9,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const token = cookies.get('sb-access-token')?.value;
     let userId = null;
     if (token) {
-        const { data: { user } } = await supabaseAdmin.auth.getUser(token);
-        userId = user?.id;
+        const { data: userData } = await supabaseAdmin.auth.getUser(token);
+        if (userData?.user) {
+            userId = userData.user.id;
+        }
     }
 
     // 2. Registrar en Supabase (Como pendiente de bonifico)
