@@ -43,7 +43,10 @@ export const POST: APIRoute = async ({ request }) => {
     // --- ENVIAR CORREO DE BIENVENIDA (RESEND) ---
     try {
         const { Resend } = await import('resend');
-        const resendApiKey = (typeof process !== 'undefined' ? process.env.RESEND_API_KEY : undefined) || import.meta.env.RESEND_API_KEY;
+        let resendApiKey = import.meta.env.RESEND_API_KEY;
+        if (typeof process !== 'undefined' && process.env && process.env.RESEND_API_KEY) {
+            resendApiKey = process.env.RESEND_API_KEY;
+        }
         const resend = new Resend(resendApiKey);
         
         // Obtenemos todos los detalles necesarios para el correo

@@ -1,15 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
-const getEnv = (key: string) => {
+const getEnvDynamic = (key: string, staticFallback: any) => {
   if (typeof window !== 'undefined' && (window as any).env && (window as any).env[key]) {
       return (window as any).env[key];
   }
-  return import.meta.env[key] || (typeof process !== 'undefined' ? process.env[key] : undefined);
+  if (typeof process !== 'undefined' && process.env && process.env[key]) {
+      return process.env[key];
+  }
+  return staticFallback;
 };
 
-const supabaseUrl = getEnv('PUBLIC_SUPABASE_URL') || getEnv('SUPABASE_URL') || 'https://dummy.supabase.co';
-const supabaseAnonKey = getEnv('PUBLIC_SUPABASE_ANON_KEY') || getEnv('SUPABASE_ANON_KEY') || 'dummy_key';
-const supabaseServiceKey = getEnv('SUPABASE_SERVICE_ROLE');
+const supabaseUrl = getEnvDynamic('PUBLIC_SUPABASE_URL', import.meta.env.PUBLIC_SUPABASE_URL || import.meta.env.SUPABASE_URL) || 'https://dummy.supabase.co';
+const supabaseAnonKey = getEnvDynamic('PUBLIC_SUPABASE_ANON_KEY', import.meta.env.PUBLIC_SUPABASE_ANON_KEY || import.meta.env.SUPABASE_ANON_KEY) || 'dummy_key';
+const supabaseServiceKey = getEnvDynamic('SUPABASE_SERVICE_ROLE', import.meta.env.SUPABASE_SERVICE_ROLE);
 
 // Cliente público para operaciones
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
