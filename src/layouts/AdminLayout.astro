@@ -22,6 +22,29 @@ const { title } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
+    <!-- Dynamic Environment Variables for Client-Side Scripts (Docker fallback) -->
+    <script
+      is:inline
+      define:vars={{
+        PUBLIC_SUPABASE_URL:
+          import.meta.env.PUBLIC_SUPABASE_URL ||
+          (typeof process !== "undefined"
+            ? process.env.PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+            : undefined) ||
+          "https://dummy.supabase.co",
+        PUBLIC_SUPABASE_ANON_KEY:
+          import.meta.env.PUBLIC_SUPABASE_ANON_KEY ||
+          (typeof process !== "undefined"
+            ? process.env.PUBLIC_SUPABASE_ANON_KEY ||
+              process.env.SUPABASE_ANON_KEY
+            : undefined) ||
+          "dummy_key",
+      }}
+    >
+      window.env = window.env || {};
+      window.env.PUBLIC_SUPABASE_URL = PUBLIC_SUPABASE_URL;
+      window.env.PUBLIC_SUPABASE_ANON_KEY = PUBLIC_SUPABASE_ANON_KEY;
+    </script>
   </head>
   <body
     class="bg-[#FBF6E6] font-body text-gray-900 flex h-screen overflow-hidden"

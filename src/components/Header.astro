@@ -209,6 +209,11 @@
 
     const isLoggedIn = !!session || !!guestEmail;
 
+    // Check if user is admin
+    const isMasterAdmin = session?.user?.email === "admin@pachamama.com";
+    const isTeamAdmin = session?.user?.user_metadata?.role === "admin";
+    const isAdmin = isMasterAdmin || isTeamAdmin;
+
     if (isLoggedIn) {
       desktopLogout?.classList.remove("hidden");
       desktopLogin?.classList.add("hidden");
@@ -218,6 +223,29 @@
       mobileLogout?.classList.remove("hidden");
       mobileLogin?.classList.add("hidden");
       mobileOrders?.classList.remove("hidden");
+
+      // Dynamic routing for Admin vs Client
+      if (isAdmin) {
+        if (desktopOrders) {
+          desktopOrders.innerText = "Pannello Admin";
+          desktopOrders.setAttribute("href", "/admin");
+        }
+        if (mobileOrders) {
+          mobileOrders.innerText = "Pannello Admin";
+          mobileOrders.setAttribute("href", "/admin");
+        }
+        if (mobileIcon) mobileIcon.setAttribute("href", "/admin");
+      } else {
+        if (desktopOrders) {
+          desktopOrders.innerText = "Area Cliente";
+          desktopOrders.setAttribute("href", "/area-cliente");
+        }
+        if (mobileOrders) {
+          mobileOrders.innerText = "Area Cliente";
+          mobileOrders.setAttribute("href", "/area-cliente");
+        }
+        if (mobileIcon) mobileIcon.setAttribute("href", "/area-cliente");
+      }
     } else {
       desktopLogout?.classList.add("hidden");
       desktopLogin?.classList.remove("hidden");
