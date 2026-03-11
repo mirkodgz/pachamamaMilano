@@ -1,6 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
 const getEnv = (key: string) => {
+  if (typeof window !== 'undefined' && (window as any).env && (window as any).env[key]) {
+      return (window as any).env[key];
+  }
   return import.meta.env[key] || (typeof process !== 'undefined' ? process.env[key] : undefined);
 };
 

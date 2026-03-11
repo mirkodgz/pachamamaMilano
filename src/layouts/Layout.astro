@@ -29,6 +29,29 @@ const {
       rel="stylesheet"
     />
 
+    <!-- Dynamic Environment Variables for Client-Side Scripts (Docker fallback) -->
+    <script
+      is:inline
+      define:vars={{
+        PUBLIC_SUPABASE_URL:
+          import.meta.env.PUBLIC_SUPABASE_URL ||
+          (typeof process !== "undefined"
+            ? process.env.PUBLIC_SUPABASE_URL
+            : undefined) ||
+          "https://dummy.supabase.co",
+        PUBLIC_SUPABASE_ANON_KEY:
+          import.meta.env.PUBLIC_SUPABASE_ANON_KEY ||
+          (typeof process !== "undefined"
+            ? process.env.PUBLIC_SUPABASE_ANON_KEY
+            : undefined) ||
+          "dummy_key",
+      }}
+    >
+      window.env = window.env || {};
+      window.env.PUBLIC_SUPABASE_URL = PUBLIC_SUPABASE_URL;
+      window.env.PUBLIC_SUPABASE_ANON_KEY = PUBLIC_SUPABASE_ANON_KEY;
+    </script>
+
     <title>{title}</title>
   </head>
   <body
