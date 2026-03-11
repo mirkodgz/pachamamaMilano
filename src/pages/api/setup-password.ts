@@ -43,7 +43,8 @@ export const POST: APIRoute = async ({ request }) => {
     // --- ENVIAR CORREO DE BIENVENIDA (RESEND) ---
     try {
         const { Resend } = await import('resend');
-        const resend = new Resend(import.meta.env.RESEND_API_KEY);
+        const resendApiKey = import.meta.env.RESEND_API_KEY || (typeof process !== 'undefined' ? process.env.RESEND_API_KEY : undefined);
+        const resend = new Resend(resendApiKey);
         
         // Obtenemos todos los detalles necesarios para el correo
         const { data: fullOrder } = await supabaseAdmin
