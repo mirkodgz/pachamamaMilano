@@ -47,7 +47,7 @@ export const POST: APIRoute = async ({ request }) => {
 
           console.log("Generando email para Gift Card:", giftCardUrl);
 
-          await resend.emails.send({
+          const { data, error: resendError } = await resend.emails.send({
             from: 'Pachamama Milano <marketing@pachamamamilano.it>',
             to: [cardData.sender_email.toLowerCase()],
             subject: `La tua Gift Card Pachamama è pronta! (Ordine #${shortId})`,
@@ -92,9 +92,15 @@ export const POST: APIRoute = async ({ request }) => {
               </div>
             `
           });
+          
+          if (resendError) {
+              console.error("Resend API rejected the payment confirmation email:", resendError);
+          } else {
+              console.log("Email with Gift Card sent successfully via Resend:", data);
+          }
         }
       } catch (err) {
-        console.error("Errore invio Gift Card automatica:", err);
+        console.error("Errore invio Gift Card automatica (Catch Block):", err);
         // Continuiamo comunque per aggiornare lo stato nel DB
       }
     }
