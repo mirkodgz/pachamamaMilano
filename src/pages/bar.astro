@@ -19,10 +19,9 @@ const title = "Menu Bar & Bevande | Pachamama Milano";
         class="px-6 flex flex-wrap justify-center gap-4 pt-8 pb-0 relative z-40 bg-black"
       >
         <div id="category-tags" class="flex flex-wrap justify-center gap-3">
-          <!-- Dinamico -->
           <button
             data-category="all"
-            class="category-tag active px-6 py-2 border border-white text-white font-display text-[10px] uppercase tracking-[0.2em] transition-all hover:bg-white hover:text-black rounded-none"
+            class="category-tag active px-6 py-2 border border-white bg-white text-black font-display text-[10px] uppercase tracking-[0.2em] transition-all hover:bg-white hover:text-black rounded-none"
           >
             Tutte le bevande
           </button>
@@ -96,7 +95,7 @@ const title = "Menu Bar & Bevande | Pachamama Milano";
 
         // Poblar Etiquetas
         categoryTags.innerHTML =
-          '<button data-category="all" class="category-tag active px-6 py-2 border border-white text-white font-display text-[10px] uppercase tracking-[0.3em] transition-all hover:bg-white hover:text-black rounded-none">Tutte le bevande</button>' +
+          '<button data-category="all" class="category-tag active px-6 py-2 border border-white bg-white text-black font-display text-[10px] uppercase tracking-[0.3em] transition-all hover:bg-white hover:text-black rounded-none">Tutte le bevande</button>' +
           categories
             .map(
               (cat) =>
