@@ -1,0 +1,1096 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+
+const ALLERGENSList = [
+  { id: 1, name: "Glutine" },
+  { id: 2, name: "Crostacei" },
+  { id: 3, name: "Uova" },
+  { id: 4, name: "Pesce" },
+  { id: 5, name: "Arachidi" },
+  { id: 6, name: "Soia" },
+  { id: 7, name: "Latte" },
+  { id: 8, name: "Frutta a guscio" },
+  { id: 9, name: "Sedano" },
+  { id: 10, name: "Senape" },
+  { id: 11, name: "Sesamo" },
+  { id: 12, name: "Solfiti" },
+  { id: 13, name: "Lupini" },
+  { id: 14, name: "Molluschi" },
+];
+---
+
+<AdminLayout title="Gestione Menu | Admin Pachamama">
+  <!-- Tabs Navigazione -->
+  <div class="flex justify-center gap-4 mb-8 border-b border-gray-200 pb-0">
+    <button
+      id="tab-categories"
+      class="px-6 py-3 text-sm font-bold uppercase tracking-widest border-b-2 border-dark text-dark transition-colors"
+    >
+      Gestione Categorie
+    </button>
+    <button
+      id="tab-items"
+      class="px-6 py-3 text-sm font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-400 hover:text-dark transition-colors"
+    >
+      Gestione Piatti
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div id="loading-state" class="flex justify-center items-center py-20">
+    <div
+      class="animate-spin rounded-full h-12 w-12 border-4 border-gold border-t-transparent"
+    >
+    </div>
+  </div>
+
+  <!-- Main Content (Hidden initially) -->
+  <div id="main-content" class="hidden relative min-h-[50vh]">
+    <!-- View Categorie -->
+    <div
+      id="view-categories"
+      class="w-full animate-fade-in opacity-100 z-10 mb-5"
+    >
+      <div
+        class="bg-white rounded-xl shadow-sm border border-black/5 overflow-hidden flex flex-col w-full"
+      >
+        <!-- Header Categorie -->
+        <div
+          class="px-6 py-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50/50"
+        >
+          <h2 class="font-display text-xl uppercase tracking-widest text-dark">
+            Categorie Menu
+          </h2>
+          <button
+            id="btn-add-category"
+            class="bg-dark hover:bg-gold hover:text-dark text-white text-[10px] uppercase font-bold px-8 py-3.5 rounded-lg transition-all flex items-center shadow-md gap-2 whitespace-nowrap shrink-0"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"></path>
+            </svg>
+            Nuova Categoria
+          </button>
+        </div>
+        <!-- List Categorie -->
+        <div class="p-0 overflow-y-auto">
+          <div id="categories-container" class="divide-y divide-gray-100">
+            <!-- Loaded via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Piatti -->
+    <div
+      id="view-items"
+      class="hidden w-full opacity-0 pointer-events-none mb-5"
+    >
+      <div
+        class="bg-white rounded-xl shadow-sm border border-black/5 overflow-hidden flex flex-col w-full"
+      >
+        <!-- Header Piatti -->
+        <div
+          class="px-6 py-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50/50"
+        >
+          <div class="flex items-center gap-3 w-full sm:max-w-xl">
+            <div class="relative w-full">
+              <div
+                class="absolute inset-y-0 left-0 flex items-center pointer-events-none"
+                style="padding-left: 16px;"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="search-item"
+                placeholder="Cerca piatto..."
+                class="w-full border border-gray-200 bg-white text-black rounded-lg py-2.5 pr-3 text-sm font-semibold outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
+                style="padding-left: 42px;"
+              />
+            </div>
+            <div class="relative w-full sm:w-48 shrink-0">
+              <select
+                id="filter-category"
+                class="w-full border border-gray-200 bg-white text-black rounded-lg p-2.5 pr-8 text-sm font-semibold outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors appearance-none cursor-pointer"
+              >
+                <option value="all">Tutte le Categorie</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"></path></svg
+                >
+              </div>
+            </div>
+          </div>
+          <button
+            id="btn-add-item"
+            class="bg-dark hover:bg-gold hover:text-dark text-white text-[10px] uppercase font-bold px-8 py-3.5 rounded-lg transition-all flex items-center shadow-md gap-2 whitespace-nowrap shrink-0"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"></path>
+            </svg>
+            Nuovo Piatto
+          </button>
+        </div>
+
+        <!-- Tabella Piatti -->
+        <div class="p-0 overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[700px]">
+            <thead>
+              <tr
+                class="bg-gray-50/20 border-b border-gray-200 text-[10px] uppercase tracking-wider text-gray-500 font-bold"
+              >
+                <th class="p-4 w-20 text-center">Img</th>
+                <th class="p-4">Titolo</th>
+                <th class="p-4 w-1/4">Categoria</th>
+                <th class="p-4 text-center w-28">Prezzo</th>
+                <th class="p-4 text-center w-28">Stato</th>
+                <th class="p-4 text-right w-24">Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="items-container" class="divide-y divide-gray-100">
+              <!-- Loaded via JS -->
+            </tbody>
+          </table>
+          <div
+            id="items-empty-state"
+            class="hidden p-12 text-center text-gray-400 font-semibold italic"
+          >
+            Nessun piatto trovato.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Modal -->
+  <div
+    id="modal-category"
+    class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center backdrop-blur-sm px-4"
+  >
+    <div
+      class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all modal-content"
+      onclick="event.stopPropagation()"
+    >
+      <div
+        class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50"
+      >
+        <h3
+          class="font-display text-xl uppercase tracking-widest text-dark"
+          id="modal-category-title"
+        >
+          Nuova Categoria
+        </h3>
+        <button
+          id="btn-close-category"
+          type="button"
+          class="text-gray-400 hover:text-dark transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 pointer-events-none"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"></path></svg
+          >
+        </button>
+      </div>
+      <form id="form-category" class="p-6">
+        <input type="hidden" id="category-id" value="" />
+        <div class="space-y-4">
+          <div>
+            <label
+              class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
+            >
+              Nome <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="category-name"
+              required
+              class="w-full border border-gray-300 bg-white text-black rounded-lg p-3 text-sm focus:border-gold focus:ring focus:ring-gold/20 transition-all outline-none"
+              placeholder="es. Entradas..."
+            />
+          </div>
+        </div>
+        <div class="mt-8 flex justify-end gap-3">
+          <button
+            type="button"
+            id="btn-cancel-category"
+            class="px-5 py-2.5 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            Annulla
+          </button>
+          <button
+            type="submit"
+            id="btn-save-category"
+            class="px-6 py-2.5 rounded-lg text-sm font-bold bg-dark text-gold tracking-widest uppercase hover:bg-black transition-colors shadow-sm flex items-center gap-2"
+          >
+            <span>Salva Categoria</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Item Modal -->
+  <div
+    id="modal-item"
+    class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center backdrop-blur-sm px-4"
+  >
+    <div
+      class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all max-h-[90vh] flex flex-col modal-content"
+      onclick="event.stopPropagation()"
+    >
+      <div
+        class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 shrink-0"
+      >
+        <h3
+          class="font-display text-xl uppercase tracking-widest text-dark"
+          id="modal-item-title"
+        >
+          Nuovo Piatto
+        </h3>
+        <button
+          id="btn-close-item"
+          type="button"
+          class="text-gray-400 hover:text-dark transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 pointer-events-none"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            ><path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"></path></svg
+          >
+        </button>
+      </div>
+      <form id="form-item" class="p-6 overflow-y-auto flex-1">
+        <input type="hidden" id="item-id" value="" />
+        <input type="hidden" id="item-existing-image-url" value="" />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
+              >
+                Titolo (Nome del Piatto) <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="item-title"
+                required
+                class="w-full border border-gray-300 bg-white text-black rounded-lg p-3 text-sm focus:border-gold focus:ring focus:ring-gold/20 transition-all outline-none"
+                placeholder="es. Ceviche Mixto..."
+              />
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
+              >
+                Categoria <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="item-category-id"
+                required
+                class="w-full border border-gray-300 bg-white text-black rounded-lg p-3 text-sm focus:border-gold focus:ring focus:ring-gold/20 transition-all outline-none"
+              >
+                <!-- Loaded via JS -->
+              </select>
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
+              >
+                Prezzo (€) <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                id="item-price"
+                step="0.01"
+                required
+                class="w-full border border-gray-300 bg-white text-black rounded-lg p-3 text-sm focus:border-gold focus:ring focus:ring-gold/20 transition-all outline-none"
+                placeholder="0.00"
+              />
+            </div>
+            <div class="pt-4">
+              <div class="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="item-is-available"
+                  class="w-5 h-5 text-gold border-gray-300 rounded focus:ring-gold/20"
+                  checked
+                />
+                <label
+                  class="text-sm font-bold text-gray-700"
+                  for="item-is-available"
+                >
+                  Disponibile per l'ordinazione
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
+              >
+                Descrizione
+              </label>
+              <textarea
+                id="item-description"
+                rows="3"
+                class="w-full border border-gray-300 bg-white text-black rounded-lg p-3 text-sm focus:border-gold focus:ring focus:ring-gold/20 transition-all outline-none resize-none"
+                placeholder="Descrizione del piatto o ingredienti..."
+              ></textarea>
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2"
+              >
+                Immagine <span class="text-gray-400 normal-case font-normal"
+                  >(opzionale)</span
+                >
+              </label>
+              <input
+                type="file"
+                id="item-image-file"
+                accept="image/*"
+                class="w-full border border-gray-300 bg-white text-black rounded-lg p-2 text-sm focus:border-gold focus:ring focus:ring-gold/20 transition-all outline-none file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-gray-100 file:text-dark hover:file:bg-gray-200"
+              />
+              <div id="image-preview-container" class="mt-3 hidden">
+                <p
+                  class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1"
+                >
+                  Immagine Attuale:
+                </p>
+                <img
+                  id="image-preview-element"
+                  src=""
+                  class="w-full h-32 object-cover rounded-lg border border-gray-200"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 border-t border-gray-100 pt-6">
+          <label
+            class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3"
+          >
+            Allergeni Presenti (Reg. UE 1169/11)
+          </label>
+          <div class="flex flex-wrap gap-2" id="allergens-container">
+            {
+              ALLERGENSList.map((al) => (
+                <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors">
+                  <input
+                    type="checkbox"
+                    value={al.id}
+                    class="allergen-checkbox w-3.5 h-3.5 text-gold border-gray-300 rounded focus:ring-gold/20"
+                  />
+                  <span class="text-[10px] font-bold text-gray-700 uppercase">
+                    {al.id}. {al.name}
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </div>
+        <div class="mt-8 flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <button
+            type="button"
+            id="btn-cancel-item"
+            class="px-5 py-2.5 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            Annulla
+          </button>
+          <button
+            type="submit"
+            id="btn-save-item"
+            class="px-6 py-2.5 rounded-lg text-sm font-bold bg-dark text-gold tracking-widest uppercase hover:bg-black transition-colors shadow-sm flex items-center gap-2"
+          >
+            <span>Salva Piatto</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Image Popup (Lightbox) -->
+  <div
+    id="modal-image-preview"
+    class="fixed inset-0 bg-black/90 z-60 hidden items-center justify-center p-4 cursor-zoom-out"
+    onclick="this.classList.add('hidden'); this.classList.remove('flex');"
+  >
+    <img
+      id="full-image-preview"
+      src=""
+      class="max-w-full max-h-full object-contain shadow-2xl rounded-lg"
+    />
+  </div>
+
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+  </style>
+
+  <script>
+    import { supabase } from "../../lib/supabase";
+
+    let categories: any[] = [];
+    let items: any[] = [];
+    let currentSearchTerm = "";
+    let currentCategoryFilter = "all";
+
+    // Navigation Tabs Elements
+    const tabCategories = document.getElementById("tab-categories")!;
+    const tabItems = document.getElementById("tab-items")!;
+    const viewCategories = document.getElementById("view-categories")!;
+    const viewItems = document.getElementById("view-items")!;
+
+    // Modal Backgrounds for click-outside to close
+    const modalCategory = document.getElementById("modal-category")!;
+    const modalItem = document.getElementById("modal-item")!;
+    const modalImagePreview = document.getElementById("modal-image-preview")!;
+
+    // Tab Logic
+    function switchTab(tab: "categories" | "items") {
+      if (tab === "categories") {
+        tabCategories.classList.replace("border-transparent", "border-dark");
+        tabCategories.classList.replace("text-gray-400", "text-dark");
+        tabItems.classList.replace("border-dark", "border-transparent");
+        tabItems.classList.replace("text-dark", "text-gray-400");
+
+        viewCategories.classList.remove(
+          "hidden",
+          "opacity-0",
+          "pointer-events-none",
+        );
+        viewCategories.classList.add("animate-fade-in", "z-10");
+        viewItems.classList.add("hidden", "opacity-0", "pointer-events-none");
+        viewItems.classList.remove("animate-fade-in", "z-10");
+      } else {
+        tabItems.classList.replace("border-transparent", "border-dark");
+        tabItems.classList.replace("text-gray-400", "text-dark");
+        tabCategories.classList.replace("border-dark", "border-transparent");
+        tabCategories.classList.replace("text-dark", "text-gray-400");
+
+        viewItems.classList.remove(
+          "hidden",
+          "opacity-0",
+          "pointer-events-none",
+        );
+        viewItems.classList.add("animate-fade-in", "z-10");
+        viewCategories.classList.add(
+          "hidden",
+          "opacity-0",
+          "pointer-events-none",
+        );
+        viewCategories.classList.remove("animate-fade-in", "z-10");
+      }
+    }
+
+    tabCategories.addEventListener("click", () => switchTab("categories"));
+    tabItems.addEventListener("click", () => switchTab("items"));
+
+    // DOM Elements
+    const loadingState = document.getElementById("loading-state")!;
+    const mainContent = document.getElementById("main-content")!;
+    const categoriesContainer = document.getElementById(
+      "categories-container",
+    )!;
+    const itemsContainer = document.getElementById("items-container")!;
+    const itemsEmptyState = document.getElementById("items-empty-state")!;
+    const searchItem = document.getElementById(
+      "search-item",
+    ) as HTMLInputElement;
+    const filterCategory = document.getElementById(
+      "filter-category",
+    ) as HTMLSelectElement;
+
+    // Modal Category Buttons
+    const btnAddCategory = document.getElementById("btn-add-category")!;
+    const btnCloseCategory = document.getElementById("btn-close-category")!;
+    const btnCancelCategory = document.getElementById("btn-cancel-category")!;
+    const formCategory = document.getElementById(
+      "form-category",
+    ) as HTMLFormElement;
+
+    // Modal Item Buttons
+    const btnAddItem = document.getElementById("btn-add-item")!;
+    const btnCloseItem = document.getElementById("btn-close-item")!;
+    const btnCancelItem = document.getElementById("btn-cancel-item")!;
+    const formItem = document.getElementById("form-item") as HTMLFormElement;
+
+    // Click outside modal
+    modalCategory.addEventListener("mousedown", (e) => {
+      if (e.target === modalCategory) closeCatModal();
+    });
+    modalItem.addEventListener("mousedown", (e) => {
+      if (e.target === modalItem) closeItemModal();
+    });
+
+    // --- Events Category Modal ---
+    btnAddCategory.addEventListener("click", () => {
+      formCategory.reset();
+      (document.getElementById("category-id") as HTMLInputElement).value = "";
+      document.getElementById("modal-category-title")!.innerText =
+        "Nuova Categoria";
+      modalCategory.classList.remove("hidden");
+      modalCategory.classList.add("flex");
+    });
+
+    const closeCatModal = () => {
+      modalCategory.classList.add("hidden");
+      modalCategory.classList.remove("flex");
+    };
+    btnCloseCategory.addEventListener("click", closeCatModal);
+    btnCancelCategory.addEventListener("click", closeCatModal);
+
+    formCategory.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btnSave = document.getElementById(
+        "btn-save-category",
+      ) as HTMLButtonElement;
+      const originalText = btnSave.innerHTML;
+      btnSave.innerHTML = "Salvataggio...";
+      btnSave.disabled = true;
+
+      const id = (document.getElementById("category-id") as HTMLInputElement)
+        .value;
+      const name = (
+        document.getElementById("category-name") as HTMLInputElement
+      ).value;
+
+      try {
+        if (id) {
+          const { error } = await supabase
+            .from("menu_categories")
+            .update({ name })
+            .eq("id", id);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from("menu_categories")
+            .insert([{ name, order: 0 }]);
+          if (error) throw error;
+        }
+        closeCatModal();
+        await loadData();
+      } catch (err) {
+        console.error(err);
+        alert("Errore nel salvataggio. Riprova.");
+      } finally {
+        btnSave.innerHTML = originalText;
+        btnSave.disabled = false;
+      }
+    });
+
+    // --- Events Item Modal ---
+    btnAddItem.addEventListener("click", () => {
+      if (categories.length === 0) {
+        alert("Devi creare prima almeno una categoria!");
+        return;
+      }
+      formItem.reset();
+      (document.getElementById("item-id") as HTMLInputElement).value = "";
+      document.querySelectorAll(".allergen-checkbox").forEach((el) => {
+        (el as HTMLInputElement).checked = false;
+      });
+      (
+        document.getElementById("item-existing-image-url") as HTMLInputElement
+      ).value = "";
+      document
+        .getElementById("image-preview-container")!
+        .classList.add("hidden");
+      document.getElementById("modal-item-title")!.innerText = "Nuovo Piatto";
+
+      const itemCategoryIdSelect = document.getElementById(
+        "item-category-id",
+      ) as HTMLSelectElement;
+      itemCategoryIdSelect.innerHTML = categories
+        .map((c) => `<option value="${c.id}">${c.name}</option>`)
+        .join("");
+
+      modalItem.classList.remove("hidden");
+      modalItem.classList.add("flex");
+    });
+
+    const closeItemModal = () => {
+      modalItem.classList.add("hidden");
+      modalItem.classList.remove("flex");
+    };
+    btnCloseItem.addEventListener("click", closeItemModal);
+    btnCancelItem.addEventListener("click", closeItemModal);
+
+    formItem.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btnSave = document.getElementById(
+        "btn-save-item",
+      ) as HTMLButtonElement;
+      const originalText = btnSave.innerHTML;
+      btnSave.disabled = true;
+
+      const id = (document.getElementById("item-id") as HTMLInputElement).value;
+      const title = (document.getElementById("item-title") as HTMLInputElement)
+        .value;
+      const category_id = (
+        document.getElementById("item-category-id") as HTMLSelectElement
+      ).value;
+      const price =
+        parseFloat(
+          (document.getElementById("item-price") as HTMLInputElement).value,
+        ) || 0;
+      const description = (
+        document.getElementById("item-description") as HTMLTextAreaElement
+      ).value;
+      const is_available = (
+        document.getElementById("item-is-available") as HTMLInputElement
+      ).checked;
+
+      const allergensElements = document.querySelectorAll(
+        ".allergen-checkbox:checked",
+      );
+      const allergens = Array.from(allergensElements).map((el) =>
+        parseInt((el as HTMLInputElement).value),
+      );
+
+      const imageFileInput = document.getElementById(
+        "item-image-file",
+      ) as HTMLInputElement;
+      let finalImageUrl = (
+        document.getElementById("item-existing-image-url") as HTMLInputElement
+      ).value;
+
+      try {
+        if (imageFileInput.files && imageFileInput.files.length > 0) {
+          btnSave.innerHTML = "Caricamento Immagine...";
+          const file = imageFileInput.files[0];
+          const formData = new FormData();
+          formData.append("file", file);
+
+          const res = await fetch("/api/admin/upload-menu-image", {
+            method: "POST",
+            body: formData,
+          });
+          const result = await res.json();
+
+          if (result.success) {
+            finalImageUrl = result.url;
+          } else {
+            throw new Error(
+              result.error || "Errore upload immagine su Cloudflare",
+            );
+          }
+        }
+
+        btnSave.innerHTML = "Salvataggio Piatto...";
+
+        const data = {
+          title,
+          category_id,
+          price,
+          description,
+          allergens,
+          image_url: finalImageUrl,
+          is_available,
+          order: 0,
+        };
+
+        if (id) {
+          const { error } = await supabase
+            .from("menu_items")
+            .update(data)
+            .eq("id", id);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from("menu_items").insert([data]);
+          if (error) throw error;
+        }
+        closeItemModal();
+        await loadData();
+      } catch (err: any) {
+        console.error(err);
+        alert(err.message || "Errore nel salvataggio del piatto.");
+      } finally {
+        btnSave.innerHTML = originalText;
+        btnSave.disabled = false;
+      }
+    });
+
+    // --- List Event Delegation (Edit, Delete, View Image) ---
+    categoriesContainer.addEventListener("click", async (e) => {
+      const target = e.target as HTMLElement;
+
+      const editBtn = target.closest(".btn-edit-category");
+      if (editBtn) {
+        const id = editBtn.getAttribute("data-id");
+        const cat = categories.find((c) => c.id === id);
+        if (cat) {
+          (document.getElementById("category-id") as HTMLInputElement).value =
+            cat.id;
+          (document.getElementById("category-name") as HTMLInputElement).value =
+            cat.name;
+          document.getElementById("modal-category-title")!.innerText =
+            "Modifica Categoria";
+          modalCategory.classList.remove("hidden");
+          modalCategory.classList.add("flex");
+        }
+      }
+
+      const delBtn = target.closest(".btn-delete-category");
+      if (delBtn) {
+        const id = delBtn.getAttribute("data-id");
+        if (
+          confirm(
+            "Sei sicuro di voler eliminare questa categoria? Tutti i piatti associati riceveranno problemi.",
+          )
+        ) {
+          try {
+            const { error } = await supabase
+              .from("menu_categories")
+              .delete()
+              .eq("id", id);
+            if (error) throw error;
+            await loadData();
+          } catch (err) {
+            console.error("Delete Error", err);
+            alert("Errore nell'eliminazione.");
+          }
+        }
+      }
+    });
+
+    itemsContainer.addEventListener("click", async (e) => {
+      const target = e.target as HTMLElement;
+
+      // Image Thumbnail Click
+      if (
+        target.tagName.toLowerCase() === "img" &&
+        target.classList.contains("item-thumbnail")
+      ) {
+        const src = (target as HTMLImageElement).src;
+        const fullImagePreview = document.getElementById(
+          "full-image-preview",
+        ) as HTMLImageElement;
+        fullImagePreview.src = src;
+        modalImagePreview.classList.remove("hidden");
+        modalImagePreview.classList.add("flex");
+        return;
+      }
+
+      const editBtn = target.closest(".btn-edit-item");
+      if (editBtn) {
+        const id = editBtn.getAttribute("data-id");
+        const item = items.find((i) => i.id === id);
+        if (item) {
+          formItem.reset();
+
+          const itemCategoryIdSelect = document.getElementById(
+            "item-category-id",
+          ) as HTMLSelectElement;
+          itemCategoryIdSelect.innerHTML = categories
+            .map((c) => `<option value="${c.id}">${c.name}</option>`)
+            .join("");
+
+          (document.getElementById("item-id") as HTMLInputElement).value =
+            item.id;
+          (document.getElementById("item-title") as HTMLInputElement).value =
+            item.title;
+          (
+            document.getElementById("item-category-id") as HTMLSelectElement
+          ).value = item.category_id || "";
+          (document.getElementById("item-price") as HTMLInputElement).value =
+            item.price;
+          (
+            document.getElementById("item-description") as HTMLTextAreaElement
+          ).value = item.description || "";
+          (
+            document.getElementById("item-is-available") as HTMLInputElement
+          ).checked = item.is_available;
+
+          document.querySelectorAll(".allergen-checkbox").forEach((el) => {
+            const input = el as HTMLInputElement;
+            input.checked = (item.allergens || []).includes(
+              parseInt(input.value),
+            );
+          });
+
+          const existingInput = document.getElementById(
+            "item-existing-image-url",
+          ) as HTMLInputElement;
+          const previewContainer = document.getElementById(
+            "image-preview-container",
+          )!;
+          const previewImg = document.getElementById(
+            "image-preview-element",
+          ) as HTMLImageElement;
+
+          if (item.image_url) {
+            existingInput.value = item.image_url;
+            previewImg.src = item.image_url;
+            previewContainer.classList.remove("hidden");
+          } else {
+            existingInput.value = "";
+            previewContainer.classList.add("hidden");
+          }
+
+          document.getElementById("modal-item-title")!.innerText =
+            "Modifica Piatto";
+          modalItem.classList.remove("hidden");
+          modalItem.classList.add("flex");
+        }
+      }
+
+      const delBtn = target.closest(".btn-delete-item");
+      if (delBtn) {
+        const id = delBtn.getAttribute("data-id");
+        if (confirm("Sei sicuro di voler eliminare questo piatto?")) {
+          try {
+            const { error } = await supabase
+              .from("menu_items")
+              .delete()
+              .eq("id", id);
+            if (error) throw error;
+            await loadData();
+          } catch (err) {
+            console.error("Delete error", err);
+            alert("Errore nell'eliminazione.");
+          }
+        }
+      }
+    });
+
+    // --- Loading & Rendering ---
+    let isFirstLoad = true;
+
+    async function loadData() {
+      try {
+        loadingState.classList.remove("hidden");
+        mainContent.classList.add("hidden");
+
+        const [catsResponse, itemsResponse] = await Promise.all([
+          supabase
+            .from("menu_categories")
+            .select("*")
+            .order("order", { ascending: true }),
+          supabase
+            .from("menu_items")
+            .select("*, category:menu_categories(name)")
+            .order("order", { ascending: true }),
+        ]);
+
+        if (catsResponse.error) throw catsResponse.error;
+        if (itemsResponse.error) throw itemsResponse.error;
+
+        categories = catsResponse.data || [];
+        items = itemsResponse.data || [];
+
+        if (filterCategory) {
+          filterCategory.innerHTML =
+            '<option value="all">Tutte le Categorie</option>' +
+            categories
+              .map((c) => `<option value="${c.id}">${c.name}</option>`)
+              .join("");
+        }
+
+        renderCategories();
+        renderItems();
+
+        loadingState.classList.add("hidden");
+        mainContent.classList.remove("hidden");
+
+        if (isFirstLoad) {
+          switchTab("items");
+          isFirstLoad = false;
+        }
+      } catch (error) {
+        console.error("Errore loading menu data:", error);
+        alert("Errore caricamento dati dal database.");
+        loadingState.classList.add("hidden");
+      }
+    }
+
+    // --- Render Logic ---
+    function renderCategories() {
+      if (categories.length === 0) {
+        categoriesContainer.innerHTML =
+          '<div class="p-8 text-center text-gray-400 font-semibold italic">Nessuna categoria creata.</div>';
+        return;
+      }
+
+      categoriesContainer.innerHTML = categories
+        .map(
+          (cat) => `
+            <div class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors group">
+                <span class="font-bold text-dark text-sm">${cat.name}</span>
+                <div class="flex gap-2">
+                    <button class="btn-edit-category bg-white border border-gray-200 p-2 rounded-md text-gray-500 hover:text-dark hover:bg-gray-50 transition-colors shadow-sm cursor-pointer" data-id="${cat.id}" title="Modifica">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                    </button>
+                    <button class="btn-delete-category bg-white border border-red-100 p-2 rounded-md text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors shadow-sm cursor-pointer" data-id="${cat.id}" title="Elimina">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                </div>
+            </div>
+        `,
+        )
+        .join("");
+    }
+
+    function applyFilters() {
+      renderItems();
+    }
+
+    searchItem.addEventListener("input", (e) => {
+      currentSearchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+      applyFilters();
+    });
+
+    if (filterCategory) {
+      filterCategory.addEventListener("change", (e) => {
+        currentCategoryFilter = (e.target as HTMLSelectElement).value;
+        applyFilters();
+      });
+    }
+
+    function renderItems() {
+      let filtered = items;
+
+      if (currentCategoryFilter !== "all") {
+        filtered = filtered.filter(
+          (item) => item.category_id === currentCategoryFilter,
+        );
+      }
+
+      // Filtro Testuale (Ricerca)
+      if (currentSearchTerm.trim() !== "") {
+        filtered = filtered.filter(
+          (item) =>
+            item.title.toLowerCase().includes(currentSearchTerm) ||
+            (item.description &&
+              item.description.toLowerCase().includes(currentSearchTerm)),
+        );
+      }
+
+      if (filtered.length === 0) {
+        itemsContainer.innerHTML = "";
+        itemsEmptyState.classList.remove("hidden");
+        return;
+      }
+
+      itemsEmptyState.classList.add("hidden");
+
+      itemsContainer.innerHTML = filtered
+        .map(
+          (item) => `
+            <tr class="hover:bg-gray-50 transition-colors group">
+                <td class="p-3 text-center border-r border-gray-50 align-middle">
+                    ${
+                      item.image_url
+                        ? `<img src="${item.image_url}" class="w-10 h-10 object-cover rounded-md mx-auto shadow-sm item-thumbnail cursor-pointer hover:scale-110 transition-transform" alt="thumbnail" title="Clicca per ingrandire" />`
+                        : `<div class="w-10 h-10 bg-gray-100 rounded-md flex items-center justify-center mx-auto text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg></div>`
+                    }
+                </td>
+                <td class="p-3 align-middle border-r border-gray-50">
+                    <div class="font-bold text-dark text-sm leading-tight">${item.title}</div>
+                    ${item.description ? `<div class="text-xs text-gray-500 mt-0.5 line-clamp-1 truncate max-w-[200px]" title="${item.description}">${item.description}</div>` : ""}
+                </td>
+                <td class="p-3 align-middle border-r border-gray-50">
+                    <span class="inline-block bg-gray-100 text-gray-600 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest">${item.category?.name || "Senza Categoria"}</span>
+                </td>
+                <td class="p-3 text-center align-middle font-bold text-dark border-r border-gray-50">
+                    €${item.price.toFixed(2)}
+                </td>
+                <td class="p-3 text-center align-middle border-r border-gray-50">
+                    ${
+                      item.is_available
+                        ? '<span class="inline-flex items-center gap-1 px-2 py-1 rounded" style="font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; color: #059669; background-color: #ecfdf5;"><span style="width: 6px; height: 6px; border-radius: 50%; background-color: #10b981;"></span> Disponibile</span>'
+                        : '<span class="inline-flex items-center gap-1 px-2 py-1 rounded" style="font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; color: #dc2626; background-color: #fef2f2;"><span style="width: 6px; height: 6px; border-radius: 50%; background-color: #ef4444;"></span> Esaurito</span>'
+                    }
+                </td>
+                <td class="p-3 text-right align-middle">
+                    <div class="flex justify-end gap-2">
+                        <button class="btn-edit-item bg-white border border-gray-200 p-1.5 rounded-md text-gray-400 hover:text-dark hover:bg-gray-50 transition-colors shadow-sm cursor-pointer" data-id="${item.id}" title="Modifica">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        </button>
+                        <button class="btn-delete-item bg-white border border-red-100 p-1.5 rounded-md text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors shadow-sm cursor-pointer" data-id="${item.id}" title="Elimina">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `,
+        )
+        .join("");
+    }
+
+    // Init
+    document.addEventListener("DOMContentLoaded", loadData);
+  </script>
+</AdminLayout>

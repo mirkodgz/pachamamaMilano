@@ -1,83 +1,379 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import SectionPattern from '../components/SectionPattern.astro';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import SectionPattern from "../components/SectionPattern.astro";
 
-const title = "Menu | Pachamama Milano";
+const ALLERGENSList = [
+  { id: 1, name: "Glutine" },
+  { id: 2, name: "Crostacei" },
+  { id: 3, name: "Uova" },
+  { id: 4, name: "Pesce" },
+  { id: 5, name: "Arachidi" },
+  { id: 6, name: "Soia" },
+  { id: 7, name: "Latte" },
+  { id: 8, name: "Frutta a guscio" },
+  { id: 9, name: "Sedano" },
+  { id: 10, name: "Senape" },
+  { id: 11, name: "Sesamo" },
+  { id: 12, name: "Solfiti" },
+  { id: 13, name: "Lupini" },
+  { id: 14, name: "Molluschi" },
+];
+
+const title = "Menu Gastronomico | Pachamama Milano";
 ---
 
 <Layout title={title}>
   <Header />
 
-  <main class="bg-white text-black pt-32 pb-24">
-    <div class="container mx-auto px-4 max-w-4xl text-center">
-        <span class="text-gold uppercase tracking-widest text-sm font-bold">La Nostra Proposta</span>
-        <h1 class="text-5xl md:text-6xl font-display font-bold uppercase mb-12">Il Nostro Menu</h1>
-        
-        <p class="text-gray-600 mb-16 max-w-2xl mx-auto">
-            Un viaggio attraverso i sapori del Perù, reinterpretati in chiave moderna. 
-            Utilizziamo solo ingredienti freschissimi e di alta qualità.
+  <main
+    class="text-white pt-[96px] pb-24 min-h-screen relative overflow-hidden bg-black"
+  >
+    <div class="w-full lg:max-w-screen-2xl lg:mx-auto lg:w-[85%]">
+      <!-- Filtro Centrado (Estilo Cuadrado y Pro) -->
+      <!-- Filtro por Etiquetas (Pro & Minimalista) -->
+      <div
+        class="px-6 flex flex-wrap justify-center gap-4 pt-8 pb-0 relative z-40 bg-black"
+      >
+        <div id="category-tags" class="flex flex-wrap justify-center gap-3">
+          <!-- Dinamico -->
+          <button
+            data-category="all"
+            class="category-tag active px-6 py-2 border border-white text-white font-display text-[10px] uppercase tracking-[0.2em] transition-all hover:bg-white hover:text-black rounded-none"
+          >
+            Tutte le portate
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="menu-grid"
+        class="w-full px-4 md:px-6 mt-0 relative z-10 space-y-16"
+      >
+        <!-- Los platos se renderizarán aquí agrupados por categoría -->
+      </div>
+
+      <!-- Portada por Categoría (Se activará al filtrar) -->
+      <div id="category-empty" class="hidden text-center py-20">
+        <p class="text-gray-500 font-display uppercase tracking-widest">
+          Seleziona una categoria per visualizzare i piatti
         </p>
-    </div>
-
-    <SectionPattern />
-
-    <div class="container mx-auto px-4 max-w-4xl mt-16">
-        
-        <!-- Category: ANTIPASTI -->
-        <div class="mb-16">
-            <h2 class="text-3xl font-display font-bold uppercase mb-8 text-center border-b border-gold/30 pb-4">Antipasti / Entradas</h2>
-            <div class="grid gap-8">
-                <!-- Item 1 -->
-                <div class="flex justify-between items-baseline group hover:bg-neutral-50 p-4 rounded-lg transition-colors">
-                    <div class="text-left">
-                        <h3 class="font-bold text-xl uppercase mb-1 group-hover:text-gold transition-colors">Ceviche Clasico</h3>
-                        <p class="text-gray-500 text-sm italic">Pesce fresco marinato in leche de tigre, mais, patata dolce</p>
-                    </div>
-                    <div class="text-xl font-bold ml-4">€ 22</div>
-                </div>
-                 <!-- Item 2 -->
-                 <div class="flex justify-between items-baseline group hover:bg-neutral-50 p-4 rounded-lg transition-colors">
-                    <div class="text-left">
-                        <h3 class="font-bold text-xl uppercase mb-1 group-hover:text-gold transition-colors">Tiradito Nikkei</h3>
-                        <p class="text-gray-500 text-sm italic">Sashimi di ricciola, salsa ponzu, avocado, sesamo</p>
-                    </div>
-                    <div class="text-xl font-bold ml-4">€ 24</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Category: PRIMI -->
-        <div class="mb-16">
-            <h2 class="text-3xl font-display font-bold uppercase mb-8 text-center border-b border-gold/30 pb-4">Primi Piatti / Principales</h2>
-             <div class="grid gap-8">
-                <!-- Item 1 -->
-                <div class="flex justify-between items-baseline group hover:bg-neutral-50 p-4 rounded-lg transition-colors">
-                    <div class="text-left">
-                        <h3 class="font-bold text-xl uppercase mb-1 group-hover:text-gold transition-colors">Arroz con Mariscos</h3>
-                        <p class="text-gray-500 text-sm italic">Riso al salto con frutti di mare, salsa madre, piselli</p>
-                    </div>
-                    <div class="text-xl font-bold ml-4">€ 26</div>
-                </div>
-                 <!-- Item 2 -->
-                 <div class="flex justify-between items-baseline group hover:bg-neutral-50 p-4 rounded-lg transition-colors">
-                    <div class="text-left">
-                        <h3 class="font-bold text-xl uppercase mb-1 group-hover:text-gold transition-colors">Lomo Saltado</h3>
-                        <p class="text-gray-500 text-sm italic">Filetto di manzo saltato al wok, cipolla, pomodoro, patate fritte</p>
-                    </div>
-                    <div class="text-xl font-bold ml-4">€ 28</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-center mt-12 bg-neutral-100 p-8 rounded-lg">
-            <p class="text-sm text-gray-500 uppercase tracking-widest mb-4">Hai allergie o intolleranze?</p>
-            <p class="text-gray-700">Chiedi al nostro personale per la lista degli allergeni.</p>
-        </div>
-
+      </div>
     </div>
   </main>
-  
-  <Footer />
+
+  <!-- Allergen Modal / Overlay -->
+  <div
+    id="allergen-modal"
+    class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+  >
+    <div
+      class="bg-[#0a0a0a] border border-white/10 rounded-none max-w-lg w-full p-10 relative animate-scale-in"
+    >
+      <button
+        id="close-allergen"
+        class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
+      >
+        <svg
+          class="w-8 h-8"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          ><path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path></svg
+        >
+      </button>
+
+      <h2
+        class="text-3xl font-display font-bold uppercase text-gold mb-6 tracking-tight"
+      >
+        Informazioni Allergeni
+      </h2>
+      <div id="allergen-info-content" class="grid gap-4">
+        <!-- Dinamico -->
+      </div>
+
+      <p class="mt-8 text-xs text-gray-500 italic leading-relaxed">
+        * Per ulteriori informazioni sulla presenza di sostanze che possono
+        provocare allergie o intolleranze, si prega di consultare il personale
+        di sala.
+      </p>
+    </div>
+  </div>
 </Layout>
+
+<Footer />
+
+<style>
+  /* Custom Animations */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out forwards;
+  }
+  .animate-scale-in {
+    animation: scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Hide default select arrow in IE */
+  select::-ms-expand {
+    display: none;
+  }
+
+  .category-tag.active {
+    background-color: white;
+    color: black;
+  }
+
+  header {
+    border-bottom: none !important;
+    background-color: #000000 !important;
+  }
+
+  body {
+    background-color: #000000 !important;
+  }
+
+  .allergen-trigger {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .allergen-trigger:hover {
+    background-color: #ffd54e !important;
+    color: #1a1a1a !important;
+    border-color: #ffd54e !important;
+    opacity: 1 !important;
+  }
+</style>
+
+<script>
+  import { supabase } from "../lib/supabase";
+
+  const ALLERGENS = [
+    { id: 1, name: "Glutine" },
+    { id: 2, name: "Crostacei" },
+    { id: 3, name: "Uova" },
+    { id: 4, name: "Pesce" },
+    { id: 5, name: "Arachidi" },
+    { id: 6, name: "Soia" },
+    { id: 7, name: "Latte" },
+    { id: 8, name: "Frutta a guscio" },
+    { id: 9, name: "Sedano" },
+    { id: 10, name: "Senape" },
+    { id: 11, name: "Sesamo" },
+    { id: 12, name: "Solfiti" },
+    { id: 13, name: "Lupini" },
+    { id: 14, name: "Molluschi" },
+  ];
+
+  let categories: any[] = [];
+  let items: any[] = [];
+  const menuGrid = document.getElementById("menu-grid")!;
+  const categoryTags = document.getElementById("category-tags")!;
+  const allergenModal = document.getElementById("allergen-modal")!;
+  const allergenContent = document.getElementById("allergen-info-content")!;
+  const closeAllergen = document.getElementById("close-allergen")!;
+
+  async function init() {
+    try {
+      // Carga de Datos
+      const [catsRes, itemsRes] = await Promise.all([
+        supabase
+          .from("menu_categories")
+          .select("*")
+          .order("order", { ascending: true }),
+        supabase
+          .from("menu_items")
+          .select("*")
+          .eq("is_available", true)
+          .order("order", { ascending: true }),
+      ]);
+
+      categories = catsRes.data || [];
+      items = itemsRes.data || [];
+
+      // Poblar Etiquetas
+      if (categories.length === 0) {
+        categoryTags.innerHTML =
+          '<span class="text-white/30 italic">Nessuna categoria trovata</span>';
+      } else {
+        categoryTags.innerHTML =
+          '<button data-category="all" class="category-tag active px-6 py-2 border border-white text-white font-display text-[10px] uppercase tracking-[0.3em] transition-all hover:bg-white hover:text-black rounded-none">Tutte le portate</button>' +
+          categories
+            .map(
+              (cat) =>
+                `<button data-category="${cat.id}" class="category-tag px-6 py-2 border border-white/20 text-white/50 font-display text-[10px] uppercase tracking-[0.3em] transition-all hover:border-white hover:text-white rounded-none">${cat.name}</button>`,
+            )
+            .join("");
+      }
+
+      // Eventos de Filtro
+      document.querySelectorAll(".category-tag").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const catId = (e.currentTarget as HTMLElement).dataset.category!;
+
+          // UI Update
+          document.querySelectorAll(".category-tag").forEach((t) => {
+            t.classList.remove("active", "bg-white", "text-black");
+            t.classList.add("border-white/20", "text-white/50");
+          });
+          const target = e.currentTarget as HTMLElement;
+          target.classList.add("active", "bg-white", "text-black");
+          target.classList.remove("border-white/20", "text-white/50");
+
+          renderItems(catId);
+        });
+      });
+
+      renderItems("all");
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function renderItems(catId: string) {
+    menuGrid.innerHTML = "";
+    // Aseguramos que el contenedor sea una columna de secciones
+    menuGrid.className = "w-full px-6 mt-0 relative z-10 space-y-16";
+
+    const activeCategories =
+      catId === "all" ? categories : categories.filter((c) => c.id === catId);
+
+    if (items.length === 0) {
+      menuGrid.innerHTML = `<div class="py-20 text-center opacity-50 italic">Nessun piatto disponible.</div>`;
+      return;
+    }
+
+    activeCategories.forEach((cat) => {
+      const catItems = items.filter((i) => i.category_id === cat.id);
+
+      if (catItems.length > 0) {
+        const section = document.createElement("section");
+        section.className = "animate-fade-in";
+
+        section.innerHTML = `
+                <h2 class="text-xl md:text-2xl font-display font-medium text-center uppercase tracking-[0.4em] text-white mt-8 mb-8">
+                    ${cat.name}
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-1 gap-y-8">
+                    ${catItems
+                      .map(
+                        (item) => `
+                        <div class="group relative flex flex-col bg-dark overflow-hidden transition-all duration-500 h-full border border-white/10">
+                            <div class="aspect-[4/3] overflow-hidden relative">
+                                <img 
+                                    src="${item.image_url || "https://placehold.co/600x400/1a1a1a/gold?text=Pachamama"}" 
+                                    alt="${item.title}"
+                                    class="w-full h-full object-cover opacity-90 transition-opacity duration-700"
+                                />
+                            </div>
+
+                            <div class="p-6 flex flex-col flex-grow">
+                                <div class="flex justify-between items-start mb-4 gap-4">
+                                    <h3 class="text-lg font-display font-bold uppercase tracking-tight leading-tight">
+                                        ${item.title}
+                                    </h3>
+                                    <div class="text-xl font-display font-bold text-gold">
+                                        €${item.price.toFixed(0)}
+                                    </div>
+                                </div>
+                                <p class="text-gray-400 text-sm font-light leading-relaxed line-clamp-3 mb-4 flex-grow">
+                                    ${item.description || "Nessuna descrizione disponibile."}
+                                </p>
+                                ${
+                                  item.allergens && item.allergens.length > 0
+                                    ? `<button 
+                                        class="allergen-trigger mt-auto w-fit flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 transition-all hover:bg-gold hover:text-dark hover:border-gold rounded-none" 
+                                        data-item-id="${item.id}"
+                                      >
+                                        <span class="text-[10px] uppercase tracking-widest font-bold opacity-60">Allergeni:</span>
+                                        <div class="flex items-center gap-1.5">
+                                          ${item.allergens.map((a: string) => `<span class="text-[10px] font-bold">${a}</span>`).join('<span class="opacity-20 text-[8px]">•</span>')}
+                                        </div>
+                                      </button>`
+                                    : ""
+                                }
+                            </div>
+                        </div>
+                    `,
+                      )
+                      .join("")}
+                </div>
+            `;
+        menuGrid.appendChild(section);
+      }
+    });
+
+    // Eventos de Alérgenos
+    document.querySelectorAll(".allergen-trigger").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const itemId = (e.currentTarget as HTMLElement).dataset.itemId!;
+        const item = items.find((i) => i.id === itemId);
+        if (item && item.allergens) {
+          showAllergen(item.allergens);
+        }
+      });
+    });
+  }
+
+  function showAllergen(ids: number[]) {
+    allergenContent.innerHTML = ids
+      .map((id) => {
+        const allergen = ALLERGENS.find((a) => a.id === id);
+        if (!allergen) return "";
+        return `
+            <div class="flex items-center gap-5 p-5 border border-white/5 bg-white/[0.02] rounded-none">
+                <div class="h-10 w-10 border border-gold/50 text-gold flex items-center justify-center text-xl font-medium shrink-0">
+                    ${id}
+                </div>
+                <div>
+                    <h4 class="text-base font-display font-medium uppercase text-white tracking-[0.15em]">${allergen.name}</h4>
+                    <p class="text-gray-500 text-[10px] uppercase tracking-wider mt-1">Può contenere tracce</p>
+                </div>
+            </div>
+        `;
+      })
+      .join("");
+
+    allergenModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+
+  closeAllergen.addEventListener("click", () => {
+    allergenModal.classList.add("hidden");
+    document.body.style.overflow = "";
+  });
+
+  allergenModal.addEventListener("click", (e) => {
+    if (e.target === allergenModal) {
+      allergenModal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+  });
+
+  // Iniciar
+  init();
+</script>

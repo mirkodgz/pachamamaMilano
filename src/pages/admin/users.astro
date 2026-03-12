@@ -4,35 +4,7 @@ const title = "Gestione Utenti / Team | Pachamama Admin";
 ---
 
 <AdminLayout title={title}>
-  <div class="space-y-6 max-w-5xl mx-auto">
-    <!-- HEADER -->
-    <div class="mb-8 flex flex-col items-center justify-center text-center">
-      <h1
-        class="text-3xl font-display text-dark uppercase tracking-widest mb-4"
-      >
-        Utenti Team
-      </h1>
-      <button
-        id="btn-toggle-form"
-        class="bg-dark hover:bg-gold hover:text-dark text-white text-[10px] uppercase font-bold px-8 py-3.5 rounded-lg transition-all flex items-center shadow-md gap-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"></path>
-        </svg>
-        Aggiungi Utente
-      </button>
-    </div>
-
+  <div class="space-y-6 flex flex-col w-full h-full">
     <!-- FORMULARIO OCULTO -->
     <div
       id="create-container"
@@ -93,9 +65,35 @@ const title = "Gestione Utenti / Team | Pachamama Admin";
 
     <!-- TABLA DE USUARIOS -->
     <div
-      class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"
+      class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 flex flex-col"
     >
-      <div class="overflow-x-auto">
+      <div
+        class="px-6 py-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50/50"
+      >
+        <h2 class="font-display text-xl uppercase tracking-widest text-dark">
+          Membri del Team
+        </h2>
+        <button
+          id="btn-toggle-form"
+          class="bg-dark hover:bg-gold hover:text-dark text-white text-[10px] uppercase font-bold px-8 py-3.5 rounded-lg transition-all flex items-center shadow-md gap-2 whitespace-nowrap shrink-0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"></path>
+          </svg>
+          Aggiungi Utente
+        </button>
+      </div>
+      <div class="overflow-x-auto p-0">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr
@@ -212,7 +210,7 @@ const title = "Gestione Utenti / Team | Pachamama Admin";
               </td>
               <td class="p-5 align-middle text-center">
                  <span class="inline-block px-4 py-2 rounded-full text-[9px] uppercase tracking-widest font-bold ${isMaster ? "bg-dark text-gold" : "bg-gray-100 text-gray-500"}">
-                    ${isMaster ? "Amministratore Principale" : "Membro del Team"}
+                    ${isMaster ? "Admin" : "Team"}
                  </span>
               </td>
            `;
